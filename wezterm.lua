@@ -26,6 +26,12 @@ config.skip_close_confirmation_for_processes_named = {
 
 config.font = wezterm.font('0xProto Nerd Font Mono', { weight = 'Regular', stretch = 'Normal', style = 'Normal' })
 
+local mux = wezterm.mux
+wezterm.on("gui-startup", function()
+  local tab, pane, window = mux.spawn_window {}
+  window:gui_window():maximize()
+end)
+
 local act = wezterm.action
 config.keys = {
   -- new tab
