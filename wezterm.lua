@@ -9,6 +9,7 @@ config.window_decorations = "RESIZE"
 config.default_prog = { 'wsl', '~' }
 config.window_background_opacity = 0.75
 config.window_close_confirmation = 'NeverPrompt'
+config.audible_bell = "Disabled"
 config.skip_close_confirmation_for_processes_named = {
   'bash',
   'sh',
