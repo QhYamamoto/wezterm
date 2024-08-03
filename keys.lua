@@ -1,9 +1,9 @@
-local consts = require "consts"
-local wezterm = require "wezterm"
-local u = require "utils"
+local _C = require "consts"
+local _wt = require "wezterm"
+local _u = require "utils"
 
 local secondary_pane_ids = {}
-local act = wezterm.action
+local act = _wt.action
 
 return {
   -- tabs
@@ -17,14 +17,14 @@ return {
   {
     key = "r",
     mods = "CTRL|SHIFT|ALT",
-    action = wezterm.action_callback(function(window, pane)
+    action = _wt.action_callback(function(window, pane)
       local current_tab = pane:tab()
       local current_tab_id = current_tab:tab_id()
       local panes = current_tab:panes_with_info()
 
       main_pane = panes[1]
       secondary_pane = nil
-      u.foreach(panes, function(p, i)
+      _u.foreach(panes, function(p, i)
         local pane_id = p.pane:pane_id()
         if pane_id == secondary_pane_ids[current_tab_id] then
           secondary_pane = p
@@ -61,15 +61,15 @@ return {
   { key = "v",          mods = "CTRL",       action = act.PasteFrom "Clipboard" },
   -- F13 layer key mappings
   {
-    key = consts.F13,
+    key = _C.F13,
     mods = "NONE",
-    action = act { EmitEvent = consts.TOGGLE_EVENTS[consts.F13] }
+    action = act { EmitEvent = _C.TOGGLE_EVENTS[_C.F13] }
   },
   {
     key = "LeftArrow",
     mods = "NONE",
-    action = wezterm.action_callback(function(window, pane)
-      if u.get_layer_key_flag(consts.F13) then
+    action = _wt.action_callback(function(window, pane)
+      if _u.get_layer_key_flag(_C.F13) then
         window:perform_action(act { MoveTabRelative = -1 }, pane)
       else
         window:perform_action(act { SendKey = { key = "LeftArrow" } }, pane)
@@ -79,8 +79,8 @@ return {
   {
     key = "RightArrow",
     mods = "NONE",
-    action = wezterm.action_callback(function(window, pane)
-      if u.get_layer_key_flag(consts.F13) then
+    action = _wt.action_callback(function(window, pane)
+      if _u.get_layer_key_flag(_C.F13) then
         window:perform_action(act { MoveTabRelative = 1 }, pane)
       else
         window:perform_action(act { SendKey = { key = "RightArrow" } }, pane)

@@ -1,8 +1,8 @@
-local consts = require "consts"
+local _C = require "consts"
 
 -- Toggleable layer key flags
 local layer_key_flags = {}
-layer_key_flags[consts.F13] = false
+layer_key_flags[_C.F13] = false
 
 return {
   foreach = function(table, callback)
@@ -12,9 +12,9 @@ return {
   end,
   -- function to update acrive tab color
   update_tab_colors = function(layer_key_name)
-    bg_color = consts.COLOR_TAB_BAR_BG_DEFAULT
+    bg_color = _C.COLOR_TAB_BAR_BG_DEFAULT
     if layer_key_flags[layer_key_name] then
-      bg_color = consts.COLORS_TAB_BAR_BG_LAYERED[layer_key_name]
+      bg_color = _C.COLORS_TAB_BAR_BG_LAYERED[layer_key_name]
     end
 
     return {
@@ -22,7 +22,7 @@ return {
         tab_bar = {
           active_tab = {
             bg_color = bg_color,
-            fg_color = consts.COLOR_TAB_BAR_FG_DEFAULT,
+            fg_color = _C.COLOR_TAB_BAR_FG_DEFAULT,
           },
         },
       }

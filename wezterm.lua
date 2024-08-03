@@ -1,9 +1,9 @@
-local consts = require "consts"
-local wezterm = require "wezterm"
-local u = require "utils"
+local _C = require "consts"
+local _wt = require "wezterm"
+local _u = require "utils"
 
 local config = {}
-if wezterm.config_builder then config = wezterm.config_builder() end
+if _wt.config_builder then config = _wt.config_builder() end
 
 config.window_decorations = "RESIZE"
 config.default_prog = { "wsl", "~" }
@@ -25,19 +25,19 @@ config.skip_close_confirmation_for_processes_named = {
   "conhost.exe",
 }
 
-config.font = wezterm.font("0xProto Nerd Font Mono", { weight = "Regular", stretch = "Normal", style = "Normal" })
+config.font = _wt.font("0xProto Nerd Font Mono", { weight = "Regular", stretch = "Normal", style = "Normal" })
 
 -- open window in maximum size
-local mux = wezterm.mux
-wezterm.on("gui-startup", function()
+local mux = _wt.mux
+_wt.on("gui-startup", function()
   local _, _, window = mux.spawn_window {}
   window:gui_window():maximize()
 end)
 
 -- F13 toggle event handler
-wezterm.on(consts.TOGGLE_EVENTS[consts.F13], function(window, _)
-  u.toggle_layer_key_flag(consts.F13)
-  window:set_config_overrides(u.update_tab_colors(consts.F13))
+_wt.on(_C.TOGGLE_EVENTS[_C.F13], function(window, _)
+  _u.toggle_layer_key_flag(_C.F13)
+  window:set_config_overrides(_u.update_tab_colors(_C.F13))
 end)
 
 config.colors = require "colors"
