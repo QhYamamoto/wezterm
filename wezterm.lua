@@ -38,10 +38,16 @@ wezterm.on("gui-startup", function()
   window:gui_window():maximize()
 end)
 
+-- Set F13 as toggleable layer key
+local is_f13_pressed = false
+wezterm.on('toggle-f13', function(window, pane)
+  is_f13_pressed = not is_f13_pressed
+end)
+
 local secondary_pane_id = nil
 local act = wezterm.action
 config.keys = {
-  -- new tab
+  -- tabs
   { key = "t",          mods = "SHIFT|CTRL", action = act.SpawnTab "CurrentPaneDomain" },
   -- panes
   { key = "LeftArrow",  mods = "CTRL|ALT",   action = act.ActivatePaneDirection "Left" },
@@ -93,6 +99,30 @@ config.keys = {
   -- copy & paste
   { key = "Space",      mods = "CTRL",       action = act.ActivateCopyMode },
   { key = "v",          mods = "CTRL",       action = act.PasteFrom "Clipboard" },
+  -- F13 layer key mappings
+  { key = "F13",        mods = "NONE",       action = act { EmitEvent = "toggle-f13" } },
+  {
+    key = "LeftArrow",
+    mods = "NONE",
+    action = wezterm.action_callback(function(window, pane)
+      if is_f13_pressed then
+        window:perform_action(act { MoveTabRelative = -1 }, pane)
+      else
+        window:perform_action(act { SendKey = { key = "LeftArrow" } }, pane)
+      end
+    end)
+  },
+  {
+    key = "RightArrow",
+    mods = "NONE",
+    action = wezterm.action_callback(function(window, pane)
+      if is_f13_pressed then
+        window:perform_action(act { MoveTabRelative = 1 }, pane)
+      else
+        window:perform_action(act { SendKey = { key = "RightArrow" } }, pane)
+      end
+    end)
+  },
 }
 
 return config
