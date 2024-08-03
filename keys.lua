@@ -17,35 +17,35 @@ return {
   {
     key = "r",
     mods = "CTRL|SHIFT|ALT",
-    action = _wt.action_callback(function(window, pane)
+    action = _wt.action_callback(function(_, pane)
       local current_tab = pane:tab()
       local current_tab_id = current_tab:tab_id()
       local panes = current_tab:panes_with_info()
 
-      main_pane = panes[1]
-      secondary_pane = nil
-      _u.foreach(panes, function(p, i)
+      local primary_pane = panes[1]
+      local secondary_pane = nil
+      _u.foreach(panes, function(p, _)
         local pane_id = p.pane:pane_id()
         if pane_id == secondary_pane_ids[current_tab_id] then
           secondary_pane = p
         end
       end)
 
-      -- if secondary_pane doesn't exist yet, make it and register it's id
+      -- if secondary_pane doesn't exist yet, create that and register pane_id
       if secondary_pane == nil or #panes == 1 then
         pane:split {
           direction = "Right",
-          size = 0.4,
+          size = 0.5,
         }
 
         local _panes = current_tab:panes_with_info()
         secondary_pane_ids[current_tab_id] = _panes[#_panes].pane:pane_id()
-        -- if main_pane isn't zoomed, activate and zoom it (in order to hide secondary_pane)
-      elseif not main_pane.is_zoomed then
-        main_pane.pane:activate()
+        -- if primary_pane isn't zoomed, activate and zoom it (in order to hide secondary_pane)
+      elseif not primary_pane.is_zoomed then
+        primary_pane.pane:activate()
         current_tab:set_zoomed(true)
-        -- if main_pane is zoomed, quit zoom mode and activate secondary_pane
-      elseif main_pane.is_zoomed then
+        -- if primary_pane is zoomed, quit zoom mode and activate secondary_pane
+      elseif primary_pane.is_zoomed then
         current_tab:set_zoomed(false)
         secondary_pane.pane:activate()
       end

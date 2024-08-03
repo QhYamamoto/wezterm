@@ -11,8 +11,8 @@ return {
     end
   end,
   -- function to update acrive tab color
-  update_tab_colors = function(layer_key_name)
-    bg_color = _C.COLOR_TAB_BAR_BG_DEFAULT
+  update_tab_color_on_layer_key_pressed = function(layer_key_name)
+    local bg_color = _C.COLOR_TAB_BAR_BG_DEFAULT
     if layer_key_flags[layer_key_name] then
       bg_color = _C.COLORS_TAB_BAR_BG_LAYERED[layer_key_name]
     end
