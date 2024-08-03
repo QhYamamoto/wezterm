@@ -32,16 +32,55 @@ config.skip_close_confirmation_for_processes_named = {
 
 config.font = wezterm.font("0xProto Nerd Font Mono", { weight = "Regular", stretch = "Normal", style = "Normal" })
 
+COLOR_TAB_BAR_BG_DEFAULT = "#000000"
+COLOR_TAB_BAR_FG_DEFAULT = "#FFFFFF"
+
+config.colors = {
+  tab_bar = {
+    active_tab = {
+      bg_color = COLOR_TAB_BAR_BG_DEFAULT,
+      fg_color = COLOR_TAB_BAR_FG_DEFAULT,
+    }
+  }
+}
+
 local mux = wezterm.mux
 wezterm.on("gui-startup", function()
   local tab, pane, window = mux.spawn_window {}
   window:gui_window():maximize()
 end)
 
--- Set F13 as toggleable layer key
-local is_f13_pressed = false
+-- toggleable layer key names
+F13 = "F13"
+-- Tab bar background colors when layer key is pressed
+COLORS_TAB_BAR_BG_LAYERED = {}
+COLORS_TAB_BAR_BG_LAYERED[F13] = "#7E56C2"
+-- Toggleable layer key flags
+local LAYER_KEY_FLAGS = {}
+LAYER_KEY_FLAGS[F13] = false
+
+-- function to update acrive tab color
+local function update_tab_colors(layer_key_name)
+  bg_color = COLOR_TAB_BAR_BG_DEFAULT
+  if LAYER_KEY_FLAGS[layer_key_name] then
+    bg_color = COLORS_TAB_BAR_BG_LAYERED[layer_key_name]
+  end
+
+  return {
+    colors = {
+      tab_bar = {
+        active_tab = {
+          bg_color = bg_color,
+          fg_color = COLOR_TAB_BAR_FG_DEFAULT,
+        },
+      },
+    }
+  }
+end
+
 wezterm.on('toggle-f13', function(window, pane)
-  is_f13_pressed = not is_f13_pressed
+  LAYER_KEY_FLAGS[F13] = not LAYER_KEY_FLAGS[F13]
+  window:set_config_overrides(update_tab_colors(F13))
 end)
 
 local secondary_pane_ids = {}
@@ -106,7 +145,7 @@ config.keys = {
     key = "LeftArrow",
     mods = "NONE",
     action = wezterm.action_callback(function(window, pane)
-      if is_f13_pressed then
+      if LAYER_KEY_FLAGS[F13] then
         window:perform_action(act { MoveTabRelative = -1 }, pane)
       else
         window:perform_action(act { SendKey = { key = "LeftArrow" } }, pane)
@@ -117,7 +156,7 @@ config.keys = {
     key = "RightArrow",
     mods = "NONE",
     action = wezterm.action_callback(function(window, pane)
-      if is_f13_pressed then
+      if LAYER_KEY_FLAGS[F13] then
         window:perform_action(act { MoveTabRelative = 1 }, pane)
       else
         window:perform_action(act { SendKey = { key = "RightArrow" } }, pane)
