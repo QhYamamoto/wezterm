@@ -63,7 +63,7 @@ return {
   {
     key = _C.F13,
     mods = "NONE",
-    action = act { EmitEvent = _C.TOGGLE_EVENTS[_C.F13] }
+    action = act { EmitEvent = _u.get_layer_key_toggle_event(_C.F13) }
   },
   {
     key = "LeftArrow",

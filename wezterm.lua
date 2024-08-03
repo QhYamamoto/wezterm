@@ -6,7 +6,6 @@ local config = {}
 if _wt.config_builder then config = _wt.config_builder() end
 
 config.colors = require "colors"
-config.keys = require "keys"
 config.window_decorations = "RESIZE"
 config.default_prog = { "wsl", "~" }
 config.window_background_opacity = 0.75
@@ -36,10 +35,10 @@ _wt.on("gui-startup", function()
   window:gui_window():maximize()
 end)
 
--- F13 toggle event handler
-_wt.on(_C.TOGGLE_EVENTS[_C.F13], function(window, _)
-  _u.toggle_layer_key_flag(_C.F13)
-  window:set_config_overrides(_u.update_tab_color_on_layer_key_pressed(_C.F13))
-end)
+-- register F13 as toggleable layer key
+_u.register_toggleable_layer_key(_C.F13)
+
+-- import key settigs after registering layer keys
+config.keys = require "keys"
 
 return config
